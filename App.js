@@ -1,21 +1,68 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { WebView } from 'react-native-webview';
+import { BackHandler } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import injectCustomJavaScript from './lib/injectCustomJavaScript';
+import handleExternalLinks from './lib/handleExternalLinks';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+const baseUrl = () => {
+  const { releaseChannel } = Constants.manifest;
+
+  return (releaseChannel === 'staging') ?
+    'https://staging.timeoverflow.org' :
+    'https://www.timeoverflow.org';
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { currentUrl: baseUrl() };
+  }
+
+  componentDidMount() {
+    this._notificationSubscription =  Notifications.addNotificationReceivedListener(this.onReceiveNotification);
+    BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+  }
+
+  // Check the notification attributes:
+  // https://docs.expo.io/versions/latest/guides/push-notifications#notification-handling-timing
+  onReceiveNotification = (notification = {}) => {
+    if (notification.origin === 'selected') {
+      const { data } = notification;
+
+      if (!data) return;
+      if (!data.url) return;
+
+      this.setState({ currentUrl: `${baseUrl()}${data.url}` });
+    }
+  }
+
+  onNavigationStateChange = ({ url }) => {
+    injectCustomJavaScript(this.webview, url);
+    handleExternalLinks(this.webview, url)
+  }
+
+  onBackPress = () => {
+    this.webview.goBack();
+
+    return true;
+  }
+
+  render() {
+    return (
+      <WebView
+        ref={ref => (this.webview = ref)}
+        source={{ uri: this.state.currentUrl }}
+        style={{marginTop: Constants.statusBarHeight}}
+        onNavigationStateChange={this.onNavigationStateChange}
+        scalesPageToFit={false}
+      />
+    );
+  }
+}

@@ -1,13 +1,16 @@
 {
   "expo": {
-    "name": "timeoverflow-mobile-app2",
-    "slug": "timeoverflow-mobile-app2",
-    "version": "1.0.0",
+    "name": "TimeOverflow",
+    "slug": "time-overflow",
+    "version": "0.3.0",
     "orientation": "portrait",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/timeoverflow.png",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -17,7 +20,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "org.timeoverflow.mobileapp"
+    },
+    "android": {
+      "package": "org.timeoverflow.mobileapp",
+      "versionCode": 9
     },
     "web": {
       "favicon": "./assets/favicon.png"
