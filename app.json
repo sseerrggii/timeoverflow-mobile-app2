@@ -26,7 +26,8 @@
     },
     "android": {
       "package": "org.timeoverflow.mobileapp",
-      "versionCode": 10
+      "versionCode": 11,
+      "permissions": ["NOTIFICATIONS"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
