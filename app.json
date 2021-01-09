@@ -10,7 +10,7 @@
     ],
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/timeoverflow.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -28,6 +28,7 @@
       "package": "org.timeoverflow.mobileapp",
       "versionCode": 11,
       "permissions": ["NOTIFICATIONS"]
+
     },
     "web": {
       "favicon": "./assets/favicon.png"

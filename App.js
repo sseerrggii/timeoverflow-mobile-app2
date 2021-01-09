@@ -33,14 +33,12 @@ export default class App extends React.Component {
   // Check the notification attributes:
   // https://docs.expo.io/versions/latest/guides/push-notifications#notification-handling-timing
   onReceiveNotification = (notification = {}) => {
-    if (notification.origin === 'selected') {
       const { data } = notification;
 
       if (!data) return;
       if (!data.url) return;
 
       this.setState({ currentUrl: `${baseUrl()}${data.url}` });
-    }
   }
 
   onNavigationStateChange = ({ url }) => {
@@ -56,7 +54,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <WebView
+        <WebView
         ref={ref => (this.webview = ref)}
         source={{ uri: this.state.currentUrl }}
         style={{marginTop: Constants.statusBarHeight}}
